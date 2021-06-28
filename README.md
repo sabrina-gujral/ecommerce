@@ -1,4 +1,4 @@
-## Lesson-1
+### An E-Commerce Website
 
 Create an e-commerce website, with authentication and payment gateways in React, Redux and Firebase. 
 
