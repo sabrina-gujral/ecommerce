@@ -2,31 +2,40 @@ import React, { Component } from "react";
 import "./App.css";
 import Homepage from "./pages/homepage/homepage";
 import Header from "./components/header/header";
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Shoppage from "./pages/shoppage/shoppage";
-import Auth from "./pages/auth/auth"
-import { auth } from "./firebase/utils"
+import Auth from "./pages/auth/auth";
+import { auth, createUser } from "./firebase/utils";
 
 class App extends Component {
-
   constructor() {
-    super()
+    super();
 
     this.state = {
-      user: null 
-    }
+      user: null,
+    };
   }
 
-  unsubscribeFromAuth = null 
+  unsubscribeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({user: user})
-    })
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const userRef = await createUser(user);
+
+        userRef.onSnapshot((snapshot) => {
+          this.setState({
+            currentUser: { id: snapshot.id, ...snapshot.data() },
+          });
+        });
+      }
+
+      this.setState({ currentUser: user });
+    });
   }
 
   componentWillUnmount() {
-    this.unsubscribeFromAuth()
+    this.unsubscribeFromAuth();
   }
 
   render() {
