@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
 import Homepage from "./pages/homepage/homepage";
+import { connect } from "react-redux";
 import Header from "./components/header/header";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Shoppage from "./pages/shoppage/shoppage";
 import Auth from "./pages/auth/auth";
 import { auth, createUser } from "./firebase/utils";
+import { setCurrentUser } from "./redux/user/userActions";
 
 class App extends Component {
   constructor() {
@@ -24,15 +26,13 @@ class App extends Component {
         const userRef = await createUser(user);
 
         userRef.onSnapshot((snapshot) => {
-          this.setState({
+          this.props.setCurrentUser({
             currentUser: { id: snapshot.id, ...snapshot.data() },
           });
         });
       }
 
-      console.log(this.state.user);
-
-      this.setState({ currentUser: user });
+      this.props.setCurrentUser(user);
     });
   }
 
@@ -43,7 +43,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Header user={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path="/" component={Homepage} />
           <Route exact path="/shop" component={Shoppage} />
@@ -54,4 +54,8 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+});
+
+export default connect(null, mapDispatchToProps)(App);
