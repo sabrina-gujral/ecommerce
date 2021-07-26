@@ -30,6 +30,8 @@ class App extends Component {
         });
       }
 
+      console.log(this.state.user);
+
       this.setState({ currentUser: user });
     });
   }
