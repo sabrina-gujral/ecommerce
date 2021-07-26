@@ -12,7 +12,7 @@ class App extends Component {
     super();
 
     this.state = {
-      user: null,
+      currentUser: null,
     };
   }
 
@@ -43,7 +43,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Header user={this.state.user} />
+        <Header user={this.state.currentUser} />
         <Switch>
           <Route exact path="/" component={Homepage} />
           <Route exact path="/shop" component={Shoppage} />
