@@ -1,3 +1,3 @@
-export const toggleCart = () => {
-    return {type: 'TOGGLE'}
-}
+export const toggleCart = () => ({
+  type: "TOGGLE",
+});
